@@ -8,7 +8,7 @@
 
     {{-- Tulisan --}}
     <h1 class="logo mr-auto"><a href="/"><strong>{{ config('app.name') }}</strong></a></h1>
-    <!-- Logo SEEnglish -->
+    <!-- Logo SE English -->
     <!-- <a href="index.html" class="logo mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
     <nav class="nav-menu d-none d-lg-block">
@@ -49,7 +49,7 @@
 <!-- ======= Section halaman awal ======= -->
 <section id="hero">
   <div class="hero-container">
-    <h3>Selamat Datang di <strong>SEEnglish</strong></h3>
+    <h3>Selamat Datang di <strong>SE English</strong></h3>
     <h1>Platform Tes TOEFL di Malang Raya</h1>
     <a href="#about" class="btn-get-started scrollto">Informasi Tes</a>
   </div>
@@ -62,8 +62,8 @@
 
       <div class="section-title">
         <h2>Informasi Tes</h2>
-        <h3>Jadwal tes TOEFL <span>SEEnglish</span></h3>
-        <p>Berikut merupakan jadwal pembukaan sesi tes TOEFL SEEnglish</p>
+        <h3>Jadwal tes TOEFL <span>SE English</span></h3>
+        <p>Berikut merupakan jadwal pembukaan sesi tes TOEFL SE English</p>
       </div>
 
       <div class="row content">
@@ -112,8 +112,8 @@
 
       <div class="section-title">
         <h2>Tata Cara</h2>
-        <h3>Alur Pendaftaran Tes TOEFL <span>SEEnglish</span></h3>
-        <!-- <p>Berikut merupakan alur pendaftaran tes toefl pada platform SEEnglish.</p> -->
+        <h3>Alur Pendaftaran Tes TOEFL <span>SE English</span></h3>
+        <!-- <p>Berikut merupakan alur pendaftaran tes toefl pada platform SE English.</p> -->
       </div>
 
       <div class="row">
@@ -193,7 +193,7 @@
               <h2 style="font-weight: bold;"><a>8</a></h2>
             </div>
             <h4 class="title"><a>Hasil Tes</a></h4>
-            <p class="description">Selamat telah mengikuti tes TOEFL di SEEnglish, silahkan melihat hasil tes pada halaman riwayat.</p>
+            <p class="description">Selamat telah mengikuti tes TOEFL di SE English, silahkan melihat hasil tes pada halaman riwayat.</p>
           </div>
         </div>
 
@@ -207,8 +207,8 @@
 
       <div class="section-title">
         <h2>Term and Conditions</h2>
-        <h3>Syarat & Ketentuan Tes TOEFL <span>SEEnglish</span></h3>
-        <!-- <p>Berikut merupakan syarat tes toefl pada platform SEEnglish.</p> -->
+        <h3>Syarat & Ketentuan Tes TOEFL <span>SE English</span></h3>
+        <!-- <p>Berikut merupakan syarat tes toefl pada platform SE English.</p> -->
       </div>
 
       <div class="row content">
@@ -374,7 +374,7 @@
             <div class="address">
               <i class="icofont-google-map"></i>
               <h4>Location:</h4>
-              <p>Gedung SEEnglish, Ketawanggede,
+              <p>Gedung SE English, Ketawanggede,
                 Kec. Lowokwaru, Malang
               </p>
             </div>
@@ -386,7 +386,7 @@
             <div class="email">
               <i class="icofont-envelope"></i>
               <h4>Email:</h4>
-              <p>info@seenglish.com</p>
+              <p>info@SEEnglish.com</p>
             </div>
           </div>
         </div>
@@ -416,13 +416,13 @@
       <div class="row">
 
         <div class="col-lg-3 col-md-6 footer-contact">
-          <h3>SEEnglish</h3>
+          <h3>SE English</h3>
           <p>
             Ketawanggede, Kec. Lowokwaru<br>
             Malang, 65145<br>
             Indonesia <br><br>
             <strong>Phone:</strong> +62 8589 6554 885<br>
-            <strong>Email:</strong> info@seenglish.com<br>
+            <strong>Email:</strong> info@SEEnglish.com<br>
           </p>
         </div>
 
@@ -439,7 +439,7 @@
 
         {{-- <div class="col-lg-4 col-md-6 footer-newsletter">
           <h4>Subsribe Informasi Terbaru</h4>
-          <p>Masukkan email anda untuk mendapatkan informasi pembukaan tes SEEnglish</p>
+          <p>Masukkan email anda untuk mendapatkan informasi pembukaan tes SE English</p>
           <form action="" method="post">
             <input type="email" name="email"><input type="submit" value="Subscribe">
           </form>
@@ -453,7 +453,7 @@
 
     <div class="mr-md-auto text-center text-md-left">
       <div class="copyright">
-        &copy; Copyright 2022. <strong><span>SEEnglish</span></strong>
+        &copy; Copyright 2022. <strong><span>SE English</span></strong>
       </div>
       <div class="credits">
       </div>

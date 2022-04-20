@@ -259,8 +259,6 @@ class CrudController extends Controller
       return "<i class='fa fa-exclamation-circle' aria-hidden='true'></i> Judul tidak boleh kosong.";
     } elseif ($request->isi == "") {
       return "<i class='fa fa-exclamation-circle' aria-hidden='true'></i> Isi tidak boleh kosong.";
-    } elseif ($request->tanggal == "") {
-      return "<i class='fa fa-exclamation-circle' aria-hidden='true'></i> Tanggal tidak boleh kosong.";
     } elseif ($request->status == "") {
       return "<i class='fa fa-exclamation-circle' aria-hidden='true'></i> Status tidak boleh kosong.";
     }
