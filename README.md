@@ -4,7 +4,7 @@ Aplikasi Ujian Bahasa Inggris Berbasis Web Online
 
 ## Kebutuhan Server
 
-Aplikasi ini dibangun diatas Framework <a href="https://laravel.com/docs/7.0" target="_blank" title="silahkan buka di tab baru, dengan klik kanan atau klik CTRL + clik">Laravel 7.0</a> dan MySQL versi 5. Sebelum menjalankan aplikasi ini, silahkan disiapkan terlebih dahulu beberapa software dan ekstension berikut:
+Aplikasi ini dibangun diatas Framework <a href="https://laravel.com/docs/7.x" target="_blank" title="silahkan buka di tab baru, dengan klik kanan atau klik CTRL + clik">Laravel 7.0</a> dan MySQL versi 5. Sebelum menjalankan aplikasi ini, silahkan disiapkan terlebih dahulu beberapa software dan ekstension berikut:
 
 - PHP versi 7.2 keatas
   - OpenSSL PHP Extension
