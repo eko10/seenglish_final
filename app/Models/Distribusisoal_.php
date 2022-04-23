@@ -17,6 +17,6 @@ class Distribusisoal_ extends Model
   }
   public function jawabUser()
   {
-  	return $this->belongsTo('App\Models\Jawab', 'id_soal', 'id_soal'); //->where('id_user', Auth::user()->id);
+  	return $this->belongsTo('App\Models\Jawab', 'id_soal', 'id_soal');
   }
 }

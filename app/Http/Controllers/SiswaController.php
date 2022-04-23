@@ -177,11 +177,19 @@ class SiswaController extends Controller
     if (auth()->user()->status == 'S') {
       $dt = Carbon::now('Asia/Jakarta');
       $sekarang = $dt->toTimeString();
+      $datetime_sekarang = $dt->toDateTimeString();
       $user = User::where('id', auth()->user()->id)->first();
       $kelas = Kelas::select('kelas.*')->where('kelas.tanggal', '>', $dt->toDateString())->get();
-      // $payment = Payment::where('id', $user->payment_id)->first();
       if ($user->payment_id != null) {
         $payment = Payment::where('id', $user->payment_id)->first();
+        if($datetime_sekarang > $payment->payment_until){
+          $user->id_kelas = null;
+          $user->payment_id = null;
+          $user->status_validasi = 'N';
+          $user->status_ujian = 'Tidak Terdaftar';
+          $user->token_ujian = null;
+          $user->save();
+        }
         $payment_status = $payment->status;
         $payment_until = $payment->payment_until;
       } else {
@@ -199,7 +207,10 @@ class SiswaController extends Controller
     if (auth()->user()->status == 'S') {
       $user = User::where('id', '=', $request->id)->first();
       $kelas = Kelas::where('id', '=', $request->kelas)->first();
+      
+      // set nominal pembayaran pendaftaran ujian
       $nominal = 10000;
+
       $peserta = User::where('status', 'S')->where('id_kelas', $kelas->id)->count();
       $sisa_kuota = $kelas->kuota - $peserta;
       if ($sisa_kuota <= 0) {

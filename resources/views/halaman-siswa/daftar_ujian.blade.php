@@ -22,8 +22,8 @@
 	</div>
   </div>
   <div class="col-md-12">
-  	<div class="alert alert-warning">
-		<i class="fa fa-info-circle"></i> Batas waktu pembayaran : <b><span id="demo"></span></b><br>
+  	<div class="alert alert-danger">
+		<i class="fa fa-clock-o"></i> Batas waktu pembayaran : <b><span id="demo"></span></b><br>
 	</div>
   </div>
   <form action="{{ route('siswa.pembayaran.email') }}" id="submit-form" method="POST">
@@ -135,10 +135,10 @@ var x = setInterval(function() {
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
   document.getElementById("demo").innerHTML = days + " Hari " + hours + " Jam " + minutes + " Menit " + seconds + " Detik ";
-  if (days == 0 && hours == 0 && minutes == 59 && seconds == 59) {
+  if (days == 0 && hours == 00 && minutes == 59 && seconds == 59) {
     clearInterval(x);
 	proses1.submit();
-  } else if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
+  }else if (days == 0 && hours == 00 && minutes == 00 && seconds == 00) {
     clearInterval(x);
 	proses2.submit();
   }

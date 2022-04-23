@@ -172,9 +172,6 @@ class CrudController extends Controller
     $query->nama = $request->nama;
     $query->alamat = $request->alamat;
     $query->motto = $request->motto;
-    // $query->kab_kot = $request->kab_kot;
-    // $query->nama_kepsek = $request->nama_kepsek;
-    // $query->nip_kepsek = $request->nip_kepsek;
     $query->save();
     if ($jenis == 'nama') {
       return $request->nama;
@@ -198,44 +195,20 @@ class CrudController extends Controller
         $query->password = bcrypt($request->password);
       }
     }
-
-    // if($request->hasFile('bukti_transfer')){
-    //   if($request->hasFile('bukti_transfer')){
-    //     $imageUploadBT = $request->file('bukti_transfer');
-    //     $imageNameBT = 'BT_'.str_replace(' ', '', $request->nama).'_' . rand() . '.' . $imageUploadBT->getClientOriginalExtension();
-    //     $imagePathBT = public_path('/assets/img/user/');
-    //     $imageUploadBT->move($imagePathBT, $imageNameBT);
-    //   }else{
-    //     $imageNameBT = null;
-    //   }
-    //   $query->id_kelas = $request->kelas;
-    //   $query->nama = $request->nama;
-    //   $query->username = $request->username;
-    //   $query->pendidikan = $request->pendidikan;
-    //   $query->jk = $request->jk;
-    //   $query->email = $request->email;
-    //   $query->no_hp = $request->no_hp;
-    //   $query->alamat = $request->alamat;
-    //   $query->bukti_transfer = $imageNameBT;
-    //   $query->status_ujian = '';
-    //   $query->save();
-    // } else {
-      $query->id_kelas = $request->kelas;
-      $query->nama = $request->nama;
-      $query->username = $request->username;
-      $query->pendidikan = $request->pendidikan;
-      $query->jk = $request->jk;
-      $query->email = $request->email;
-      $query->no_hp = $request->no_hp;
-      $query->alamat = $request->alamat;
-      $query->save();
-    // }
+    $query->id_kelas = $request->kelas;
+    $query->nama = $request->nama;
+    $query->username = $request->username;
+    $query->pendidikan = $request->pendidikan;
+    $query->jk = $request->jk;
+    $query->email = $request->email;
+    $query->no_hp = $request->no_hp;
+    $query->alamat = $request->alamat;
+    $query->save();
     return 'ok';
   }
   
   public function updateGuru(Request $request)
   {
-    // dd($request->all());
     if ($request->id == 'N') {
       $query = new User;
       $query->password = bcrypt(123456);
@@ -262,8 +235,6 @@ class CrudController extends Controller
     } elseif ($request->status == "") {
       return "<i class='fa fa-exclamation-circle' aria-hidden='true'></i> Status tidak boleh kosong.";
     }
-
-    // $query = new Informasi;
 
     if ($request->id == 'N') {
       $query = new Informasi;
@@ -379,8 +350,6 @@ class CrudController extends Controller
       return "<i class='fa fa-exclamation-circle' aria-hidden='true'></i> Alamat tidak boleh kosong.";
     }
 
-    // dd($request->hasFile('gambar'));
-
     $query = new User;
 
     if($request->hasFile('gambar') || $request->hasFile('bukti_transfer')){
@@ -464,7 +433,6 @@ class CrudController extends Controller
   public function simpanSiswaViaExcel(Request $request)
   {
     if ($request->hasFile('file')) {
-      // $path = $request->file('file')->getRealPath();
       $kesalahan = '';
       $baris = 1;
       $sukses = 0;
@@ -473,7 +441,6 @@ class CrudController extends Controller
       FacadesExcel::load($request->file('file'), function ($reader) use ($kesalahan, $baris, $sukses, $gagal, $jumlah) {
         $results = $reader->get();
         $jumlah = count($results);
-        // dd($results);
         foreach ($results as $value) {
           if (!$value->nama_lengkap) {
             $kesalahan .= '<br>- Nama Siswa kosong pada baris <b>' . $baris . '</b>, proses upload dihentikan. Silahkan cek file Excel Anda lalu upload kembali.';
@@ -507,49 +474,6 @@ class CrudController extends Controller
         $aktifitas->save();
       });
       return view('siswa.hasil_upload_via_excel', compact('sukses', 'gagal', 'jumlah', 'kesalahan'));
-
-      // $data = Excel::load($request->file('file'), function ($reader) {
-      // })->get();
-      // foreach ($data as $key => $value) {
-      //   $jumlah = $key;
-      //   if (!$value->nama_lengkap) {
-      //     $kesalahan .= '<br>- Nama Siswa kosong pada baris <b>' . $baris . '</b>, proses upload dihentikan. Silahkan cek file Excel Anda lalu upload kembali.';
-      //     return view('siswa.hasil_upload_via_excel', compact('sukses', 'gagal', 'jumlah', 'kesalahan'));
-      //   }
-      //   if (!$value->no_induk) {
-      //     $kesalahan .= '<br>- No Induk/NIS kosong pada baris <b>' . $baris . '</b>, proses upload dihentikan. Silahkan cek file Excel Anda lalu upload kembali.';
-      //     return view('siswa.hasil_upload_via_excel', compact('sukses', 'gagal', 'jumlah', 'kesalahan'));
-      //   }
-      //   if (!$value->jenis_kelamin) {
-      //     $kesalahan .= '<br>- Jenis kelamin siswa kosong pada baris <b>' . $baris . '</b>, proses upload dihentikan. Silahkan cek file Excel Anda lalu upload kembali.';
-      //     return view('siswa.hasil_upload_via_excel', compact('sukses', 'gagal', 'jumlah', 'kesalahan'));
-      //   }
-      //   $cek_user = User::where('no_induk', $value->no_induk)->first();
-      //   if (!$cek_user) {
-      //     $query = new User;
-      //     $query->id_kelas = $value->id_kelas;
-      //     $query->nama = $value->nama_lengkap;
-      //     $query->no_induk = $value->no_induk;
-      //     $query->nisn = $value->nisn;
-      //     $query->jk = $value->jenis_kelamin;
-      //     $query->status = 'S';
-      //     $query->status_sekolah = 'Y';
-      //     $query->email = trim(strtolower($value->no_induk)) . '@ayosinau.com';
-      //     $query->password = bcrypt(123456);
-      //     if ($query->save()) {
-      //       $sukses = $sukses + 1;
-      //     }
-      //   }
-      //   // }
-      // }
-      // if ($sukses > $jumlah) {
-      //   $sukses == $jumlah;
-      // }
-      // $aktifitas = new Aktifitas;
-      // $aktifitas->id_user = auth()->user()->id;
-      // $aktifitas->nama = 'Mengupload data siswa via Excel. Jumlah data ' . $jumlah . ', sukses diupload sebanyak: ' . $sukses . ' dan gagal diupload sebanyak: ' . $gagal;
-      // $aktifitas->save();
-      // return view('siswa.hasil_upload_via_excel', compact('sukses', 'gagal', 'jumlah', 'kesalahan'));
     } else {
       return redirect()->route('siswa');
     }
