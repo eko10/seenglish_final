@@ -32,6 +32,17 @@
 	<hr>
 	<table width="100%">
 		<tr>
+			<td style="width: 83%">
+				@if($peserta->gambar != "")
+                	<img src="{{ public_path('/assets/img/user/'.$peserta->gambar) }}" width="100" height="100">
+				@else
+					<img src="{{ public_path('/assets/dist/img/user2-160x160.jpg') }}" width="100" height="100">
+				@endif
+			</td>
+			<td style="width: 15%"></td>
+			<td style="width: 2%"></td>
+		</tr>
+		<tr>
 			<td style="width: 15%">Nama</td>
 			<td style="width: 2%">:</td>
 			<td style="width: 83%">{{ $peserta->nama }} </td>

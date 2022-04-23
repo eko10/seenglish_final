@@ -29,50 +29,11 @@ use Carbon\Carbon; ?>
       <div class="info-box-content">
         <span class="info-box-text">Jumlah Sesi Aktif</span>
         <span class="info-box-number">{{ number_format($sesi) }} <small>Sesi</small></span>
-        <!-- <span><b>{{ number_format($soals) }}</b> <small>soal</small></span> -->
       </div>
     </div>
   </div>
 </div>
 @endif
-{{-- </div class="row">
-    <div class="col-md-12 col-sm-4 col-xs-12">
-      <div class="info-box">
-        @if(count($informasi) >= 1)
-          <div id="myCarousel" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-              @foreach($informasi->take(3) as $p)
-                <li data-target="#myCarousel" data-slide-to="{{ $loop->index }}" class="{{ $loop->first ? 'active' : '' }}"></li>
-@endforeach
-</ol>
-<div class="carousel-inner">
-  @foreach($informasi->take(3) as $p)
-  <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-    <img class="first-slide" width="100%" height="300px" src="{{ ($p->gambar == null) ? asset('assets/img/noimage.jpg') : asset('assets/img/informasi/'.$p->gambar) }}" alt="{{ $p->judul }}">
-    <div class="container">
-      <div class="carousel-caption text-center">
-        <h3 style="color: black">{{ $p->judul }}</h3>
-        <p><a class="btn btn-sm btn-warning" href="{{ url('master/informasi/detail/'. $p->id) }}" role="button"><i class="fa fa-eye"></i> Lihat detail</a></p>
-      </div>
-    </div>
-  </div>
-  @endforeach
-</div>
-<a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-  <span class="sr-only">Previous</span>
-</a>
-<a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-  <span class="sr-only">Next</span>
-</a>
-</div>
-@else
-<p class="text-center" style="font-style: italic">Tidak Ada Informasi</p>
-@endif
-</div>
-</div>
-</div> --}}
 <div class="row">
   <div class="col-md-12">
     @if(!empty($informasi))

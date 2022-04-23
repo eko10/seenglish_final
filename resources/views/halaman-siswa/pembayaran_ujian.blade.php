@@ -116,6 +116,7 @@
 
 	function send_response_to_form(result) {
 		document.getElementById('json_callback').value = JSON.stringify(result);
+		console.log(result);
 		$('#submit_form').submit();
 	}
 </script>

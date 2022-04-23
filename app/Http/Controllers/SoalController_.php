@@ -20,7 +20,7 @@ use App\Models\Distribusisoal;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 
-class SoalController extends Controller
+class SoalController_ extends Controller
 {
   public function __construct()
   {

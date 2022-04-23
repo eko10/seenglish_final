@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Jawab extends Model
+class Jawab_ extends Model
 {
   public function user()
   {

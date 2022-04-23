@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 
-class Detailsoal extends Model
+class Detailsoal_ extends Model
 {
 	public function checkJawab()
 	{

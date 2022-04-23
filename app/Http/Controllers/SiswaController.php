@@ -171,6 +171,7 @@ class SiswaController extends Controller
     }
   }
 
+  // function untuk daftar ujian
   public function daftarUjian()
   {
     if (auth()->user()->status == 'S') {
@@ -178,13 +179,16 @@ class SiswaController extends Controller
       $sekarang = $dt->toTimeString();
       $user = User::where('id', auth()->user()->id)->first();
       $kelas = Kelas::select('kelas.*')->where('kelas.tanggal', '>', $dt->toDateString())->get();
+      // $payment = Payment::where('id', $user->payment_id)->first();
       if ($user->payment_id != null) {
         $payment = Payment::where('id', $user->payment_id)->first();
         $payment_status = $payment->status;
+        $payment_until = $payment->payment_until;
       } else {
         $payment_status = null;
+        $payment_until = null;
       }
-      return view('halaman-siswa.daftar_ujian', ['user' => $user, 'kelas' => $kelas, 'payment' => $payment_status, 'tgl_sekarang' => $dt->toDateString(), 'jam_sekarang' => $sekarang]);
+      return view('halaman-siswa.daftar_ujian', ['user' => $user, 'kelas' => $kelas, 'payment' => $payment_status, 'tgl_sekarang' => $dt->toDateString(), 'jam_sekarang' => $sekarang, 'batas' => $payment_until]);
     } else {
       return redirect()->route('home.index');
     }
@@ -239,6 +243,9 @@ class SiswaController extends Controller
     $kelas = Kelas::where('id', '=', $request->get('kelas'))->first();
     $peserta = User::where('status', 'S')->where('id_kelas', $kelas->id)->count();
     $sisa_kuota = $kelas->kuota - $peserta;
+    $dt = Carbon::now('Asia/Jakarta');
+    $sekarang = $dt->toTimeString();
+    $payment_until = $dt->add(1, 'day');
     if ($sisa_kuota <= 0) {
       return redirect(url('siswa/daftar-ujian'))->with('alert-failed', 'Kuota pada sesi yang anda pilih telah penuh, silahkan pilih sesi yang lain.');
     } else {
@@ -253,6 +260,7 @@ class SiswaController extends Controller
       $payment->payment_type = $json->payment_type;
       $payment->payment_code = isset($json->payment_code) ? $json->payment_code : null;
       $payment->pdf_url = isset($json->pdf_url) ? $json->pdf_url : null;
+      $payment->payment_until = $payment_until;
       $payment->save();
 
       $user = User::where('email', '=', Auth::user()->email)->first();
@@ -262,6 +270,33 @@ class SiswaController extends Controller
 
       return $user->save() ? redirect(url('siswa/daftar-ujian')) : redirect(url('siswa/daftar-ujian'))->with('alert-failed', 'Terjadi kesalahan');
     }
+  }
+
+  public function kirimEmailMin1Jam(Request $request)
+  {
+    $data["email"] = $request->email;
+    $data["title"] = "Pembayaran belum selesai";
+    $data["body"] = "";
+    $data["text"] = "Pembayaran ujian anda pada ". $request->sesi ." (". $request->tanggal .") belum selesai, mohon untuk segera melakukan pembayaran";
+
+    Mail::send('emails.send_mail', $data, function($message) use ($data) {
+      $message->to($data["email"])->subject($data["title"]);
+    });
+
+    return redirect(url('siswa/daftar-ujian'));
+  }
+
+  public function resetPendaftaranUjian(Request $request)
+  {
+    $user = User::where('email', $request->email)->first();
+    $user->id_kelas = null;
+    $user->payment_id = null;
+    $user->status_validasi = 'N';
+    $user->status_ujian = 'Tidak Terdaftar';
+    $user->token_ujian = null;
+    $user->save();
+
+    return redirect(url('siswa/daftar-ujian'));
   }
 
   public function historyUjianLama()

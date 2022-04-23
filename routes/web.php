@@ -154,4 +154,6 @@ Route::group(['prefix' => 'siswa'], function () {
 	Route::post('ujian/jawab', 'SiswaController@jawab');
 	Route::post('ujian/kirim-jawaban', 'SiswaController@kirimJawaban');
 	Route::get('cetak/pdf/sertifikat-ujian-persiswa/{nilai}', 'LaporanController@pdfSertifikatUjianPersiswa');
+	Route::post('ujian/pembayaran-ujian/kirim-email', 'SiswaController@kirimEmailMin1Jam')->name('siswa.pembayaran.email');
+	Route::post('ujian/pembayaran-ujian/reset', 'SiswaController@resetPendaftaranUjian')->name('siswa.pembayaran.reset');
 });

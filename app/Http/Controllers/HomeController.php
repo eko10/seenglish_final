@@ -38,16 +38,14 @@ class HomeController extends Controller
   {
     $siswas = User::where('status', 'S')->count();
     $pakets = Soal::where('jenis', 1)->count();
-    $soals = Detailsoal::count();
     $sesi = Kelas::where('tanggal', '>', Carbon::today()->toDateString())->count();
     $informasi = Informasi::latest()->first();
-    return view('home', compact('siswas', 'pakets', 'soals', 'informasi', 'sesi'));
+    return view('home', compact('siswas', 'pakets', 'informasi', 'sesi'));
   }
 
   public function pengaturan()
   {
     $user = User::findorfail(Auth::user()->id);
-    // $sekolah = School::first();
     return view('pengaturan.index', compact('user'));
   }
 

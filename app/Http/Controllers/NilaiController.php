@@ -141,6 +141,7 @@ class NilaiController extends Controller
         }
     }
 
+    // function untuk proses tambah pengeluaran
     public function pengeluaranPost(Request $request)
     {
         if (auth()->user()->status == 'A') {
@@ -181,6 +182,7 @@ class NilaiController extends Controller
         }
     }
 
+    // function untuk proses import nilai dengan excel
     public function importProses(Request $request)
     {
         if (auth()->user()->status == 'A') {

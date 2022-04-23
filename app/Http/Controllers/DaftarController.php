@@ -21,6 +21,7 @@ class DaftarController extends Controller
             'username' => 'required|unique:users',
             'password' => 'required|min:6',
             'no_hp' => 'required',
+            'gambar'  => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ], [
             'nama.required' => 'Nama tidak boleh kosong !',
             'email.required' => 'Email tidak boleh kosong !',
@@ -31,11 +32,21 @@ class DaftarController extends Controller
             'password.required' => 'Password tidak boleh kosong !',
             'password.min' => 'Password minimal 6 karakter !',
             'no_hp.required' => 'No. Handphone tidak boleh kosong !',
+            'gambar.required' => 'Foto tidak boleh kosong !',
+            'gambar.image' => 'File harus berupa gambar !',
+            'gambar.mimes' => 'Ekstensi file hanya boleh .jpeg, .png, .jpg !',
+            'gambar.max' => 'Ukuran file maksimal 2 MB !',
         ]);
 
         if($error->fails()) {
             return redirect()->back()->withErrors($error)->withInput();
         } 
+
+        $file = $request->file('gambar');
+        $imageUpload = $request->file('gambar');
+        $imageName = rand() . '.' . $imageUpload->getClientOriginalExtension();
+        $imagePath = public_path('/assets/img/user/');
+        $imageUpload->move($imagePath, $imageName);
 
         $user = new \App\User;
         $user->nama = $request->nama;
@@ -50,6 +61,7 @@ class DaftarController extends Controller
         $user->status_ujian = 'Tidak Terdaftar';
         $user->status_validasi = 'N';
         $user->status_sekolah = 'Y';
+        $user->gambar = $imageName;
         $user->remember_token = Str::random(60);
         $user->save();
         return redirect('/login')->with(['success' => 'Pendaftaran akun berhasil.']);

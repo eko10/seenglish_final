@@ -6,7 +6,7 @@ use App\Models\DetailSoalEssay;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Facades\Datatables;
 
-class DetailSoalEssayController extends Controller
+class DetailSoalEssayController_ extends Controller
 {
   /**
    * Display a listing of the resource.

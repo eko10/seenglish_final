@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 
-class Distribusisoal extends Model
+class Distribusisoal_ extends Model
 {
   public function soal()
   {

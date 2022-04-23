@@ -56,7 +56,7 @@
 
       <div class="register-box-body" style="padding: 20px 0 30px 0;">
         <!-- <p class="login-box-msg">Silahkan daftar dahulu!</p> -->
-        <form role="form" method="POST" action="{{ route('register.proses') }}">
+        <form role="form" method="POST" action="{{ route('register.proses') }}" enctype="multipart/form-data">
           {{ csrf_field() }}
           <div class="form-group has-feedback {{ $errors->has('nama') ? ' has-error' : '' }}">
             <input id="nama" type="text" class="form-control" name="nama" value="{{ old('nama') }}" autofocus placeholder="Nama Lengkap">
@@ -119,6 +119,14 @@
             @if ($errors->has('alamat'))
             <span class="help-block">
               <strong>{{ $errors->first('alamat') }}</strong>
+            </span>
+            @endif
+          </div>
+          <div class="form-group has-feedback {{ $errors->has('gambar') ? ' has-error' : '' }}">
+            <input id="gambar" type="file" class="form-control" name="gambar" placeholder="gambar">
+            @if ($errors->has('gambar'))
+            <span class="help-block">
+              <strong>{{ $errors->first('gambar') }}</strong>
             </span>
             @endif
           </div>

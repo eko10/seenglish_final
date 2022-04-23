@@ -18,9 +18,24 @@
   @elseif($payment == 'pending' && $tgl_sekarang < Auth::user()->getKelas->tanggal)
   <div class="col-md-12">
   	<div class="alert alert-warning">
-		<i class="fa fa-info-circle"></i> Mohon segera lakukan pembayaran pendaftaran ujian anda pada sesi <b>{{ Auth::user()->getKelas->nama }} ({{ Auth::user()->getKelas->tanggal }}), rincian pembayaran telah dikirim ke email anda.</b><br>
+		<i class="fa fa-info-circle"></i> Mohon segera lakukan pembayaran pendaftaran ujian anda pada sesi <b>{{ Auth::user()->getKelas->nama }} ({{ Auth::user()->getKelas->tanggal }}),</b> rincian pembayaran telah dikirim ke email anda.<br>
 	</div>
   </div>
+  <div class="col-md-12">
+  	<div class="alert alert-warning">
+		<i class="fa fa-info-circle"></i> Batas waktu pembayaran : <b><span id="demo"></span></b><br>
+	</div>
+  </div>
+  <form action="{{ route('siswa.pembayaran.email') }}" id="submit-form" method="POST">
+	{{ csrf_field() }}
+	<input type="hidden" name="email" value="{{ Auth::user()->email }}">
+	<input type="hidden" name="sesi" value="{{ Auth::user()->getKelas->nama}}">
+	<input type="hidden" name="tanggal" value="{{ Auth::user()->getKelas->tanggal}}">
+  </form>
+  <form action="{{ route('siswa.pembayaran.reset') }}" id="submit-form-reset" method="POST">
+	{{ csrf_field() }}
+	<input type="hidden" name="email" value="{{ Auth::user()->email }}">
+  </form>
   @else
   <div class="col-md-12">
 	<div class="box box-primary">
@@ -104,5 +119,29 @@
     		allowClear: true
 		});
 	});
+</script>
+<script>
+// Set the date we're counting down to
+var countDownDate = new Date("{{ $batas }}").getTime();
+var proses1 = document.getElementById('submit-form');
+var proses2 = document.getElementById('submit-form-reset');
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+  var now = new Date().getTime();
+  var distance = countDownDate - now;
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  document.getElementById("demo").innerHTML = days + " Hari " + hours + " Jam " + minutes + " Menit " + seconds + " Detik ";
+  if (days == 0 && hours == 0 && minutes == 59 && seconds == 59) {
+    clearInterval(x);
+	proses1.submit();
+  } else if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
+    clearInterval(x);
+	proses2.submit();
+  }
+}, 1000);
 </script>
 @endpush

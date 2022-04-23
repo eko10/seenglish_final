@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JawabEsay;
 use Illuminate\Http\Request;
 
-class JawabController extends Controller
+class JawabController_ extends Controller
 {
   public function simpanScore(Request $request)
   {
