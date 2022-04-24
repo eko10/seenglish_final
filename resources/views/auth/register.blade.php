@@ -123,7 +123,7 @@
             @endif
           </div>
           <div class="form-group has-feedback {{ $errors->has('gambar') ? ' has-error' : '' }}">
-            <input id="gambar" type="file" class="form-control" name="gambar" placeholder="gambar">
+            <input id="gambar" type="file" class="form-control" name="gambar" placeholder="gambar" style="width: 85%; margin: auto;">
             @if ($errors->has('gambar'))
             <span class="help-block">
               <strong>{{ $errors->first('gambar') }}</strong>
