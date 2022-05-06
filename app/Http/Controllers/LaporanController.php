@@ -48,8 +48,9 @@ class LaporanController extends Controller
   }
 
   public function laporanKeuangan(Request $request){
-      $keuangan = Keuangan::whereYear('tanggal', '=', $request->tahun)->orderBy('tanggal', 'DESC')->get();
-      return view('laporan.keuangan.index', compact('keuangan'));
+    $keuangan = Keuangan::whereBetween('tanggal', [$request->tanggal_awal, $request->tanggal_akhir])->orderBy('tanggal', 'DESC')->get();
+    // $keuangan = Keuangan::whereBetween('tanggal', '=', $request->tahun)->orderBy('tanggal', 'DESC')->get();
+    return view('laporan.keuangan.index', compact('keuangan'));
   }
 
   public function detailKelas(Request $request)
@@ -299,9 +300,12 @@ class LaporanController extends Controller
   public function pdfLaporanKeuangan(Request $request)
   {
     $user = User::where('id', $request->user)->first();
-    $keuangan = Keuangan::whereYear('tanggal', '=', $request->tahun)->orderBy('tanggal', 'desc')->get();
-    $keuangan_masuk = Keuangan::where('posisi', 'M')->whereYear('tanggal', '=', $request->tahun)->sum('nominal');
-    $keuangan_keluar = Keuangan::where('posisi', 'K')->whereYear('tanggal', '=', $request->tahun)->sum('nominal');
+    // $keuangan = Keuangan::whereYear('tanggal', '=', $request->tahun)->orderBy('tanggal', 'desc')->get();
+    // $keuangan_masuk = Keuangan::where('posisi', 'M')->whereYear('tanggal', '=', $request->tahun)->sum('nominal');
+    // $keuangan_keluar = Keuangan::where('posisi', 'K')->whereYear('tanggal', '=', $request->tahun)->sum('nominal');
+    $keuangan = Keuangan::whereBetween('tanggal', [$request->awal, $request->akhir])->orderBy('tanggal', 'desc')->get();
+    $keuangan_masuk = Keuangan::where('posisi', 'M')->whereBetween('tanggal', [$request->awal, $request->akhir])->sum('nominal');
+    $keuangan_keluar = Keuangan::where('posisi', 'K')->whereBetween('tanggal', [$request->awal, $request->akhir])->sum('nominal');
     $pdf = PDF::loadView('laporan.pdf.laporan_keuangan', compact('user', 'keuangan', 'keuangan_masuk', 'keuangan_keluar'));
     return $pdf->setPaper('legal')->stream('Laporan Keuangan.pdf');
   }

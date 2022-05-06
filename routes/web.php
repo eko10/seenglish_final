@@ -132,7 +132,8 @@ Route::group(['prefix' => 'cetak'], function () {
 	Route::get('/berita-acara', 'ErrorHandleController@e404')->name('soal');
 	Route::get('/excel/hasil-ujian-perkelas/{soal}/{kelas}', 'LaporanController@excelHasilUjianPerkelas');
 	Route::get('/pdf/hasil-ujian-persiswa/{siswa}/{soal}', 'LaporanController@pdfHasilUjianPersiswa');
-	Route::get('/pdf/laporan-keuangan/{user}/{tahun}', 'LaporanController@pdfLaporanKeuangan');
+	Route::get('/pdf/laporan-keuangan/{user}/{awal}/{akhir}', 'LaporanController@pdfLaporanKeuangan');
+	// Route::get('/pdf/laporan-keuangan/{user}/{tahun}', 'LaporanController@pdfLaporanKeuangan');
 });
 Route::get('/activity', 'HomeController@activity');
 

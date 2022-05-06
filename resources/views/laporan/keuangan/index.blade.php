@@ -19,9 +19,17 @@
           <div class="col-sm-12">
             <form action="{{ route('keuangan.laporan.data_keuangan') }}" method="POST" class="form-horizontal">
               {!! csrf_field() !!}
-              <div class="form-group">
-                <label for="tahun">Tahun</label>
+              {{-- <div class="form-group">
+                <label>Tahun</label>
                 <input type="text" class="form-control" name="tahun" id="tahun" placeholder="{{ date('Y') }}" autocomplete="off" required>
+              </div> --}}
+              <div class="form-group">
+                <label>Tanggal Mulai</label>
+                <input type="text" class="form-control" name="tanggal_awal" id="tanggal_awal" placeholder="{{ date('Y-m-d') }}" autocomplete="off" required>
+              </div>
+              <div class="form-group">
+                <label>Tanggal Selesai</label>
+                <input type="text" class="form-control" name="tanggal_akhir" id="tanggal_akhir" placeholder="{{ date('Y-m-d') }}" autocomplete="off" required>
               </div>
               <div class="form-group">
                 <button type="submit" name="filter" class="btn btn-primary">Filter</button>
@@ -38,7 +46,8 @@
       <div class="box-header with-border">
         <h3 class="box-title aaaa">Laporan Keuangan</h3>
         <div class="pull-right">
-          <a target="_blank" href="{{ url('cetak/pdf/laporan-keuangan/' . Auth::user()->id . '/' . $_POST['tahun']) }}" class="btn btn-warning btn-md" data-toggle="tooltip" title="Cetak Laporan Keuangan"><i class="fa fa-file-pdf-o"></i> Cetak Laporan</a>
+          <a target="_blank" href="{{ url('cetak/pdf/laporan-keuangan/' . Auth::user()->id . '/' . $_POST['tanggal_awal'] . '/' . $_POST['tanggal_akhir']) }}" class="btn btn-warning btn-md" data-toggle="tooltip" title="Cetak Laporan Keuangan"><i class="fa fa-file-pdf-o"></i> Cetak Laporan</a>
+          {{-- <a target="_blank" href="{{ url('cetak/pdf/laporan-keuangan/' . Auth::user()->id . '/' . $_POST['tahun']) }}" class="btn btn-warning btn-md" data-toggle="tooltip" title="Cetak Laporan Keuangan"><i class="fa fa-file-pdf-o"></i> Cetak Laporan</a> --}}
         </div>
       </div>
       <div class="box-body">
@@ -98,6 +107,16 @@
         format: "yyyy",
         viewMode: "years", 
         minViewMode: "years",
+        autoclose: true
+      });
+
+      $("#tanggal_awal").datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true
+      });
+
+      $("#tanggal_akhir").datepicker({
+        format: 'yyyy-mm-dd',
         autoclose: true
       });
     });
