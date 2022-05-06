@@ -13,9 +13,6 @@
     <div class="box box-primary">
       <div class="box-header with-border">
         <h3 class="box-title">Ubah Sesi</h3>
-        {{-- <div class="pull-right">
-          <button type="button" class="btn btn-primary" id="btn-create"><i class="fa fa-edit"></i> Buat Sesi</button>
-        </div> --}}
       </div>
       <div class="box-body">
         <div class="col-sm-12">
@@ -74,12 +71,24 @@
     </div>
   </div>
 @endsection
+@push('css')
+  <link rel="stylesheet" href="{{URL::asset('assets/plugins/timepicker/bootstrap-timepicker.css')}}">
+@endpush
 @push('scripts')
+  <script src="{{URL::asset('assets/plugins/timepicker/bootstrap-timepicker.js')}}"></script>
   <script>
     $(document).ready(function (){
       $("#tanggal").datepicker({
         format: 'yyyy-mm-dd',
         autoclose: true
+      });
+      $('#jam_mulai').timepicker({
+        showMeridian: false,
+        showInputs: false
+      });
+      $('#jam_selesai').timepicker({
+        showMeridian: false,
+        showInputs: false
       });
       $('#save').click(function() {
         $('#notif').hide();

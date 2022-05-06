@@ -26,7 +26,7 @@ class UsersTableSeeder extends Seeder
                 'status_sekolah' 		=> 'Y',
                 'status_ujian' 			=> null,
                 'status_validasi' 		=> null,
-                'email' 				=> 'admin@seenglish.com',
+                'email' 				=> '6seenglish@gmail.com',
                 'password' 				=> bcrypt(123456)
             ]);
         }

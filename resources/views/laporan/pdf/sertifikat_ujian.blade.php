@@ -2,8 +2,8 @@
 
 <title>Sertifikat Ujian {{ $siswa->nama }}</title>
 <?php require app_path().'/functions/myconf.php'; ?>
-<div style="width:100%; height:70%; padding:20px; text-align:center; border: 10px solid #787878">
-	<div style="width:92%; height:70%; padding:20px; text-align:center; border: 5px solid #787878">
+<div style="width:92%; height:60%; padding:20px; text-align:center; border: 10px solid #787878">
+	<div style="width:93%; height:90%; padding:20px; text-align:center; border: 5px solid #787878">
 		   <span style="font-size:50px; font-weight:bold">Certificate of Achievement</span>
 		   <br><br>
 		   <span style="font-size:25px"><i>This is to certify that</i></span>

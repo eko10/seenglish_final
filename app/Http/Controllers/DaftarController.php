@@ -14,6 +14,7 @@ class DaftarController extends Controller
         return view('auth.register');
     }
 
+    // function untuk pendaftaran tes
     public function register(Request $request){
         $error = Validator::make($request->all(), [
             'nama' => 'required',

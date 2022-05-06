@@ -107,6 +107,7 @@ class NilaiController extends Controller
         }
     }
 
+    // function proses import excel nilai peserta tes
     public function inputNilaiPost(Request $request)
     {
         if (auth()->user()->status == 'A') {

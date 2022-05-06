@@ -140,18 +140,6 @@ class SiswaController extends Controller
     if (auth()->user()->status == 'A') {
       $query = User::where('id', $request->id)->first();
       $kelas = Kelas::where('id', $query->id_kelas)->first();
-      $str = $query->email . ' - '  . $query->id_kelas;
-      $token_ujian = md5($str);
-      $query->status_validasi = 'Y';
-      $query->status_ujian = 'Belum Mulai';
-      $query->token_ujian = $token_ujian;
-      $query->save();
-      $query_keuangan = new Keuangan;
-      $query_keuangan->posisi = 'M';
-      $query_keuangan->keterangan = 'Pembayaran Ujian ' . $query->nama . ' (' . $query->email . ')';
-      $query_keuangan->tanggal = date('Y-m-d');
-      $query_keuangan->nominal = 50000;
-      $query_keuangan->save();
 
       $data["email"] = $query->email;
       $data["title"] = "Pendaftaran Berhasil";
@@ -159,11 +147,13 @@ class SiswaController extends Controller
       $data["text"] = $kelas->link_wa;
 
       $pdf = PDF::loadView('pdf.kartu_ujian', ['peserta' => $query]);
-
-      Mail::send('emails.send_mail', $data, function ($message) use ($data, $pdf) {
-        $message->to($data["email"])
-          ->subject($data["title"])
-          ->attachData($pdf->output(), "Kartu Ujian.pdf");
+      $pdf2 = PDF::loadView('pdf.tata_cara');
+    
+      Mail::send('emails.send_mail', $data, function($message) use ($data, $pdf, $pdf2) {
+          $message->to($data["email"])
+                  ->subject($data["title"])
+                  ->attachData($pdf->output(), "Kartu Ujian.pdf")
+                  ->attachData($pdf2->output(), "Tata Cara Ujian.pdf");
       });
       return redirect('master/siswa/detail/' . $request->id)->withSuccess('Data berhasil divalidasi');
     } else {
@@ -207,7 +197,7 @@ class SiswaController extends Controller
     if (auth()->user()->status == 'S') {
       $user = User::where('id', '=', $request->id)->first();
       $kelas = Kelas::where('id', '=', $request->kelas)->first();
-      
+
       // set nominal pembayaran pendaftaran ujian
       $nominal = 10000;
 
@@ -282,7 +272,6 @@ class SiswaController extends Controller
       return $user->save() ? redirect(url('siswa/daftar-ujian')) : redirect(url('siswa/daftar-ujian'))->with('alert-failed', 'Terjadi kesalahan');
     }
   }
-
   public function kirimEmailMin1Jam(Request $request)
   {
     $data["email"] = $request->email;

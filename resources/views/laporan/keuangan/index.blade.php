@@ -13,14 +13,37 @@
     <div class="box box-primary">
       <div class="box-header with-border">
         <h3 class="box-title aaaa">Laporan Keuangan</h3>
+      </div>
+      <div class="box-body">
+        <div class="col-sm-12">
+          <div class="col-sm-12">
+            <form action="{{ route('keuangan.laporan.data_keuangan') }}" method="POST" class="form-horizontal">
+              {!! csrf_field() !!}
+              <div class="form-group">
+                <label for="tahun">Tahun</label>
+                <input type="text" class="form-control" name="tahun" id="tahun" placeholder="{{ date('Y') }}" autocomplete="off" required>
+              </div>
+              <div class="form-group">
+                <button type="submit" name="filter" class="btn btn-primary">Filter</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @if(isset($_POST['filter']))
+  <div class="col-md-12">
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title aaaa">Laporan Keuangan</h3>
         <div class="pull-right">
-          {{-- <button type="button" class="btn btn-primary" id="btn-create">Cetak Laporan</button> --}}
-          <a target="_blank" href="{{ url('cetak/pdf/laporan-keuangan/'.Auth::user()->id) }}" class="btn btn-warning btn-md" data-toggle="tooltip" title="Cetak Laporan Keuangan"><i class="fa fa-file-pdf-o"></i> Cetak Laporan</a>
+          <a target="_blank" href="{{ url('cetak/pdf/laporan-keuangan/' . Auth::user()->id . '/' . $_POST['tahun']) }}" class="btn btn-warning btn-md" data-toggle="tooltip" title="Cetak Laporan Keuangan"><i class="fa fa-file-pdf-o"></i> Cetak Laporan</a>
         </div>
       </div>
       <div class="box-body">
         <div class="clearfix"></div>
-  	    <table id="tabel_keuangan" class="table table-hover table-condensed">
+  	    <table class="table table-hover table-condensed" id="keuangan">
   	    	<thead>
   	    		<tr>
               <th style="text-align: center">Tipe</th>
@@ -29,10 +52,27 @@
               <th>Nominal</th>
   	    		</tr>
   	    	</thead>
+          <tbody>
+            @foreach($keuangan as $k)
+  	    		<tr>
+              <td style="text-align: center">
+                @if ($k->posisi == 'M')
+                  <center><span class='label label-success'>Masuk</span></center>
+                @else
+                  <center><span class='label label-danger'>Keluar</span></center>
+                @endif
+              </td>
+              <td>{{ $k->keterangan }}</td>
+              <td style="text-align: center">{{ $k->tanggal }}</td>
+              <td>{{ number_format($k->nominal, 2, ",", ".") }}</td>
+  	    		</tr>
+            @endforeach
+  	    	</tbody>
   	    </table>
       </div>
     </div>
   </div>
+  @endif
 @endsection
 @push('css')
   <link rel="stylesheet" href="{{URL::asset('assets/plugins/datatables/media/css/dataTables.bootstrap.css')}}">
@@ -47,26 +87,19 @@
   <script src="{{URL::asset('assets/plugins/datatables/extensions/Responsive/js/dataTables.responsive.js')}}"></script>
   <script src="{{URL::asset('assets/plugins/datatables/extensions/FixedHeader/js/dataTables.fixedHeader.js')}}"></script>
   <script>
-    $(document).ready(function (){
-    	tabel_keuangan = $('#tabel_keuangan').DataTable({
-        processing: true,
-        serverSide: true,
+    $(document).ready(function() {
+      $('#keuangan').DataTable({
         responsive: true,
         lengthChange: true,
-        ajax:'{!! route('keuangan.laporan.data_keuangan') !!}',
-        columns: [
-          {data: 'posisi', name: 'posisi', orderable: true, searchable: true },
-          {data: 'keterangan', name: 'keterangan', orderable: true, searchable: true },
-          {data: 'tanggal', name: 'tanggal', orderable: true, searchable: false },
-          {
-            data: 'nominal',
-            name: 'nominal', 
-            orderable: false, 
-            searchable: false,
-          },
-        ],
+        order: [[2, "desc"]]
       });
 
+      $('#tahun').datepicker({
+        format: "yyyy",
+        viewMode: "years", 
+        minViewMode: "years",
+        autoclose: true
+      });
     });
   </script>
 @endpush

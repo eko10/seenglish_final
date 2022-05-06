@@ -270,7 +270,7 @@ class CrudController extends Controller
     return 1;
   }
 
-  // functin untuk input sesi ujian  
+  // function untuk input sesi ujian  
   public function simpanKelas(Request $request)
   {
     if (!$request->nama) {

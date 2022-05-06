@@ -41,11 +41,15 @@ class LaporanController extends Controller
   {
     if (auth()->user()->status == 'A') {
       $user = User::where('id', auth()->user()->id)->first();
-      $keuangan = Keuangan::all();
-      return view('laporan.keuangan.index', compact('user', 'keuangan'));
+      return view('laporan.keuangan.index', compact('user'));
     } else {
       return redirect()->route('home.index');
     }
+  }
+
+  public function laporanKeuangan(Request $request){
+      $keuangan = Keuangan::whereYear('tanggal', '=', $request->tahun)->orderBy('tanggal', 'DESC')->get();
+      return view('laporan.keuangan.index', compact('keuangan'));
   }
 
   public function detailKelas(Request $request)
@@ -185,41 +189,6 @@ class LaporanController extends Controller
       })
       ->make(true);
   }
-  public function laporanKeuangan(Request $request)
-  {
-    $keuangan = Keuangan::latest()->get();
-    return Datatables::of($keuangan)
-      ->addColumn('posisi', function ($keuangan) {
-        if ($keuangan->posisi) {
-          if ($keuangan->posisi == 'M') {
-            return "<center><span class='label label-success'>Masuk</span></center>";
-          } else {
-            return "<center><span class='label label-danger'>Keluar</span></center>";
-          }
-        } else {
-          return 'no posisi';
-        }
-      })
-      ->addColumn('keterangan', function ($keuangan) {
-        if ($keuangan->keterangan) {
-          return $keuangan->keterangan;
-        } else {
-          return 'no keterangan';
-        }
-      })
-      ->addColumn('tanggal', function ($keuangan) {
-        if ($keuangan->tanggal) {
-          return '<center>'. $keuangan->tanggal .'<center>';
-        } else {
-          return 'no tanggal';
-        }
-      })
-      ->addColumn('nominal', function ($keuangan) {
-        return number_format($keuangan->nominal, 2, ",", ".");
-      })
-      ->rawColumns(['posisi', 'tanggal'])
-      ->make(true);
-  }
   public function detailLaporanSiswa(Request $request)
   {
     if (auth()->user()->status == 'A') {
@@ -286,6 +255,7 @@ class LaporanController extends Controller
       });
     })->download('xlsx');
   }
+  // function untuk cetak sertifikat
   public function pdfHasilUjianPersiswa(Request $request)
   {
     $siswa = User::where('id', $request->siswa)->first();
@@ -325,12 +295,13 @@ class LaporanController extends Controller
     $pdf = PDF::loadView('laporan.pdf.sertifikat_ujian', compact('siswa', 'nilai'));
     return $pdf->setPaper('legal')->stream('Sertifikat Ujian - '.$siswa->nama.'.pdf');
   }
+  // function cetak laporan keuangan
   public function pdfLaporanKeuangan(Request $request)
   {
     $user = User::where('id', $request->user)->first();
-    $keuangan = Keuangan::all();
-    $keuangan_masuk = Keuangan::where('posisi', 'M')->sum('nominal');
-    $keuangan_keluar = Keuangan::where('posisi', 'K')->sum('nominal');
+    $keuangan = Keuangan::whereYear('tanggal', '=', $request->tahun)->orderBy('tanggal', 'desc')->get();
+    $keuangan_masuk = Keuangan::where('posisi', 'M')->whereYear('tanggal', '=', $request->tahun)->sum('nominal');
+    $keuangan_keluar = Keuangan::where('posisi', 'K')->whereYear('tanggal', '=', $request->tahun)->sum('nominal');
     $pdf = PDF::loadView('laporan.pdf.laporan_keuangan', compact('user', 'keuangan', 'keuangan_masuk', 'keuangan_keluar'));
     return $pdf->setPaper('legal')->stream('Laporan Keuangan.pdf');
   }

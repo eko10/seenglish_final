@@ -7,7 +7,9 @@
     <h1>{{ $title }}</h1>
     <h2>{{ $body }}</h2>
     <h3>{{ $text }}</h3>
-    <p>Thanks,</p>
-    <p>SE English</p>
+    <p>
+        Thanks,<br>
+        SE English
+    </p>
 </body>
 </html>

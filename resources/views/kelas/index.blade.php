@@ -86,22 +86,12 @@
       </div>
     </div>
   </div>
-  {{-- <div class="col-md-4">
-    <div class="box box-warning">
-      <div class="box-header with-border">
-        <h3 class="box-title" style="color: darkorange"><i class="fa fa-info-circle"></i> Informasi</h3>
-      </div>
-      <div class="box-body">
-        <p>Daftarkan seluruh kelas malalui halaman ini. Data kelas diperlukan untuk mengelompokan siswa dan untuk mendistribusian paket soal.</p>
-        <p>Jika terdapat data kelas yang belum valid atau kelas yang belum terdaftar, hubungi operator sekolah untuk merubah atau mendaftarkan kelas tersebut.</p>
-      </div>
-    </div>
-  </div> --}}
 @endsection
 @push('css')
   <link rel="stylesheet" href="{{URL::asset('assets/plugins/datatables/media/css/dataTables.bootstrap.css')}}">
   <link rel="stylesheet" href="{{URL::asset('assets/plugins/datatables/extensions/Responsive/css/responsive.dataTables.css')}}">
   <link rel="stylesheet" href="{{URL::asset('assets/plugins/datatables/extensions/FixedHeader/css/fixedHeader.bootstrap.css')}}">
+  <link rel="stylesheet" href="{{URL::asset('assets/plugins/timepicker/bootstrap-timepicker.css')}}">
 @endpush
 @push('scripts')
   <script src="{{ url('assets/dist/js/sweetalert2.all.min.js') }}"></script>
@@ -110,6 +100,7 @@
   <script src="{{URL::asset('assets/plugins/datatables/media/js/dataTables.bootstrap.min.js')}}"></script>
   <script src="{{URL::asset('assets/plugins/datatables/extensions/Responsive/js/dataTables.responsive.js')}}"></script>
   <script src="{{URL::asset('assets/plugins/datatables/extensions/FixedHeader/js/dataTables.fixedHeader.js')}}"></script>
+  <script src="{{URL::asset('assets/plugins/timepicker/bootstrap-timepicker.js')}}"></script>
   <script>
     $(document).ready(function (){
       function checkconnection() {
@@ -126,14 +117,15 @@
         autoclose: true
       });
 
-      // $('#jam_mulai').timepicker({
-      //   minuteStep: 1,
-      //   template: 'modal',
-      //   appendWidgetTo: 'body',
-      //   showSeconds: true,
-      //   showMeridian: false,
-      //   defaultTime: false
-      // });
+      $('#jam_mulai').timepicker({
+        showMeridian: false,
+        showInputs: false
+      });
+
+      $('#jam_selesai').timepicker({
+        showMeridian: false,
+        showInputs: false
+      });
 
     	tabel_kelas = $('#tabel_kelas').DataTable({
         processing: true,

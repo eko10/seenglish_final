@@ -123,7 +123,7 @@ Route::group(['prefix' => 'elearning'], function () {
 
 Route::group(['prefix' => 'keuangan'], function () {
 	Route::get('/laporan', 'LaporanController@keuanganIndex')->name('keuangan.laporan');
-	Route::get('data-keuangan', 'LaporanController@laporanKeuangan')->name('keuangan.laporan.data_keuangan');
+	Route::post('data-keuangan', 'LaporanController@laporanKeuangan')->name('keuangan.laporan.data_keuangan');
 });
 
 Route::get('/download-file-format/{filename}', 'DownloadController@download')->name('download');
@@ -132,7 +132,7 @@ Route::group(['prefix' => 'cetak'], function () {
 	Route::get('/berita-acara', 'ErrorHandleController@e404')->name('soal');
 	Route::get('/excel/hasil-ujian-perkelas/{soal}/{kelas}', 'LaporanController@excelHasilUjianPerkelas');
 	Route::get('/pdf/hasil-ujian-persiswa/{siswa}/{soal}', 'LaporanController@pdfHasilUjianPersiswa');
-	Route::get('/pdf/laporan-keuangan/{user}', 'LaporanController@pdfLaporanKeuangan');
+	Route::get('/pdf/laporan-keuangan/{user}/{tahun}', 'LaporanController@pdfLaporanKeuangan');
 });
 Route::get('/activity', 'HomeController@activity');
 
