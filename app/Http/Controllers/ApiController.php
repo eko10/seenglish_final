@@ -41,6 +41,7 @@ class ApiController extends Controller
             $keuangan = new Keuangan;
             $keuangan->posisi = 'M';
             $keuangan->keterangan = 'Pembayaran Ujian '. $user->nama .' ('. $user->email .')';
+            $keuangan->sesi = $user->id_kelas;
             $keuangan->tanggal = date('Y-m-d');
             $keuangan->nominal = 10000;
             $keuangan->save();
