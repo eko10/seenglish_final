@@ -211,7 +211,7 @@ class SiswaController extends Controller
       if ($sisa_kuota <= 0) {
         return redirect(url('siswa/daftar-ujian'))->with('alert-failed', 'Kuota pada sesi yang anda pilih telah penuh, silahkan pilih sesi yang lain.');
       } else {
-        \Midtrans\Config::$serverKey = env("MIDTRANS_SERVER_KEY");
+        \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
         \Midtrans\Config::$isProduction = false;
         // \Midtrans\Config::$isProduction = true;
         \Midtrans\Config::$isSanitized = true;
