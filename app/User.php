@@ -6,6 +6,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+use App\Models\Kelas;
+
+
 class User extends Authenticatable
 {
     use Notifiable;
@@ -39,11 +42,16 @@ class User extends Authenticatable
 
     public function getKelas()
     {
-        return $this->belongsTo('App\Models\Kelas', 'id_kelas');
+        return $this->belongsTo(Kelas::class, 'id_kelas');
     }
 
     public function getPayment()
     {
         return $this->belongsTo('App\Models\Payment', 'payment_id');
     }
+
+    // public function getNilai()
+    // {
+    //     return $this->hasMany('App\Models\Nilai');
+    // }
 }

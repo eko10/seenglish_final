@@ -65,6 +65,8 @@ Route::group(['prefix' => 'master'], function () {
 	Route::get('kelas/detail/{id}', 'KelasController@detailKelas')->name('master.detail_kelas');
 	Route::get('detail-kelas/', 'KelasController@detailKelasSiswa')->name('master.detail_kelas_siswa');
 	Route::get('kelas/ubah/{id}', 'KelasController@ubahKelas')->name('master.ubah_kelas');
+
+	Route::post('filter-siswaSesi', 'SiswaController@filterSiswaSesi')->name('master.filterSiswa');
 	// route master siswa
 	Route::group(['prefix' => 'siswa'], function () {
 		Route::get('/', 'SiswaController@index')->name('siswa');
@@ -79,6 +81,9 @@ Route::group(['prefix' => 'master'], function () {
 });
 
 Route::group(['prefix' => 'elearning'], function () {
+
+	Route::post('filter-nilaiSesi', 'NilaiController@filterNilaiSesi')->name('nilai.filter');
+
 	Route::group(['prefix' => 'materi'], function () {
 		Route::get('/', 'MateriController@index')->name('elearning.materi');
 		Route::get('/get-materi-guru', 'MateriController@dataMateriGuru')->name('elearning.dataMateriGuru');
@@ -111,6 +116,7 @@ Route::group(['prefix' => 'elearning'], function () {
 	Route::group(['prefix' => 'nilai'], function () {
 		Route::get('/', 'NilaiController@index')->name('nilai');
 		Route::get('data-nilai', 'NilaiController@dataNilai')->name('elearning.data_nilai');
+		Route::get('filter-nilai', 'NilaiController@filterNilai')->name('elearning.filter_nilai');
 		Route::get('input/{id}', 'NilaiController@inputNilai');
 		Route::get('pengeluaran/{id}', 'NilaiController@pengeluaran');
 		Route::post('input', 'NilaiController@inputNilaiPost')->name('nilai.input.post');
@@ -124,6 +130,7 @@ Route::group(['prefix' => 'elearning'], function () {
 Route::group(['prefix' => 'keuangan'], function () {
 	Route::get('/laporan', 'LaporanController@keuanganIndex')->name('keuangan.laporan');
 	Route::post('data-keuangan', 'LaporanController@laporanKeuangan')->name('keuangan.laporan.data_keuangan');
+	Route::post('laporan-keuangan', 'LaporanController@filterKeuangan')->name('keuangan.laporan.filter_keuangan');
 });
 
 Route::get('/download-file-format/{filename}', 'DownloadController@download')->name('download');
@@ -133,6 +140,8 @@ Route::group(['prefix' => 'cetak'], function () {
 	Route::get('/excel/hasil-ujian-perkelas/{soal}/{kelas}', 'LaporanController@excelHasilUjianPerkelas');
 	Route::get('/pdf/hasil-ujian-persiswa/{siswa}/{soal}', 'LaporanController@pdfHasilUjianPersiswa');
 	Route::get('/pdf/laporan-keuangan/{user}/{awal}/{akhir}', 'LaporanController@pdfLaporanKeuangan');
+	Route::get('/pdf/filter-keuangan/{user}/{posisi}/{sesi}', 'LaporanController@pdfFilterKeuangan');
+	Route::get('/excel/laporan-keuangan/{user}/{awal}/{akhir}', 'LaporanController@excelLaporanKeuangan');
 	// Route::get('/pdf/laporan-keuangan/{user}/{tahun}', 'LaporanController@pdfLaporanKeuangan');
 });
 Route::get('/activity', 'HomeController@activity');
@@ -157,4 +166,8 @@ Route::group(['prefix' => 'siswa'], function () {
 	Route::get('cetak/pdf/sertifikat-ujian-persiswa/{nilai}', 'LaporanController@pdfSertifikatUjianPersiswa');
 	Route::post('ujian/pembayaran-ujian/kirim-email', 'SiswaController@kirimEmailMin1Jam')->name('siswa.pembayaran.email');
 	Route::post('ujian/pembayaran-ujian/reset', 'SiswaController@resetPendaftaranUjian')->name('siswa.pembayaran.reset');
+});
+
+Route::get('/tes', function () {
+	return view('laporan.excel.excel_laporan_keuangan');
 });
