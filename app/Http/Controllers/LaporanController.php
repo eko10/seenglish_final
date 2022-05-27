@@ -31,6 +31,7 @@ class LaporanController extends Controller
     if (auth()->user()->status == 'A') {
       $user = User::where('id', auth()->user()->id)->first();
       $kelas = Kelas::orderBy('nama', 'ASC')->paginate(20);
+
       return view('laporan.index', compact('user', 'kelas'));
     } else {
       return redirect()->route('home.index');
@@ -41,16 +42,41 @@ class LaporanController extends Controller
   {
     if (auth()->user()->status == 'A') {
       $user = User::where('id', auth()->user()->id)->first();
-      return view('laporan.keuangan.index', compact('user'));
+      $kelas = Kelas::get();
+
+      return view('laporan.keuangan.index', compact('user', 'kelas'));
     } else {
       return redirect()->route('home.index');
     }
   }
 
-  public function laporanKeuangan(Request $request){
+  public function laporanKeuangan(Request $request)
+  {
     $keuangan = Keuangan::whereBetween('tanggal', [$request->tanggal_awal, $request->tanggal_akhir])->orderBy('tanggal', 'DESC')->get();
+
     // $keuangan = Keuangan::whereBetween('tanggal', '=', $request->tahun)->orderBy('tanggal', 'DESC')->get();
     return view('laporan.keuangan.index', compact('keuangan'));
+  }
+
+  public function filterKeuangan(Request $request)
+  {
+    $kelas = Kelas::get();
+
+    if ($request->posisi != 'semua') { //posisi = request
+      if ($request->sesi != 'semua') { //sesi = request
+        $keuangan = Keuangan::where('posisi', $request->posisi)->where('sesi', $request->sesi)->orderBy('tanggal', 'DESC')->get();
+      } else { //sesi = semua
+        $keuangan = Keuangan::where('posisi', $request->posisi)->orderBy('tanggal', 'DESC')->get();
+      }
+    } else { //posisi = semua
+      if ($request->sesi != 'semua') { //sesi = request
+        $keuangan = Keuangan::where('sesi', $request->sesi)->orderBy('tanggal', 'DESC')->get();
+      } else { //sesi = semua
+        $keuangan = Keuangan::orderBy('tanggal', 'DESC')->get();
+      }
+    }
+    // $keuangan = Keuangan::whereBetween('tanggal', '=', $request->tahun)->orderBy('tanggal', 'DESC')->get();
+    return view('laporan.keuangan.index', compact('keuangan', 'kelas'));
   }
 
   public function detailKelas(Request $request)
@@ -182,9 +208,9 @@ class LaporanController extends Controller
         $id = $jawabs->user->id;
         $nama = $jawabs->user->nama;
         $kelas = $jawabs->kelas->nama;
-        if($jawabs->jumlah_nilai > 0){
+        if ($jawabs->jumlah_nilai > 0) {
           return "<center><a target='_blank' href='cetak/pdf/sertifikat-ujian-persiswa/$id/$jawabs->id_soal' class='btn btn-warning btn-md' data-toggle='tooltip' title='Cetak sertifikat untuk peserta an. $nama - $kelas '><i class='fa fa-file-pdf-o'></i> Cetak Sertifikat</a></center>";
-        }else{
+        } else {
           return "<center>-</center>";
         }
       })
@@ -294,7 +320,7 @@ class LaporanController extends Controller
     $siswa = User::where('id', auth()->user()->id)->first();
     $nilai = Nilai::where('id', $id)->first();
     $pdf = PDF::loadView('laporan.pdf.sertifikat_ujian', compact('siswa', 'nilai'));
-    return $pdf->setPaper('legal')->stream('Sertifikat Ujian - '.$siswa->nama.'.pdf');
+    return $pdf->setPaper('legal')->stream('Sertifikat Ujian - ' . $siswa->nama . '.pdf');
   }
   // function cetak laporan keuangan
   public function pdfLaporanKeuangan(Request $request)
@@ -310,4 +336,62 @@ class LaporanController extends Controller
     return $pdf->setPaper('legal')->stream('Laporan Keuangan.pdf');
   }
 
+  //cetak filter keuangan
+  public function pdfFilterKeuangan(Request $request)
+  {
+    $user = User::where('id', $request->user)->first();
+
+    if ($request->posisi != 'semua') { //posisi = request
+      if ($request->sesi != 'semua') { //sesi = request
+        $keuangan = Keuangan::where('posisi', $request->posisi)->where('sesi', $request->sesi)->orderBy('tanggal', 'DESC')->get();
+        $keuangan_masuk = Keuangan::where('posisi', 'M')->where('sesi', $request->sesi)->sum('nominal');
+        $keuangan_keluar = Keuangan::where('posisi', 'K')->where('sesi', $request->sesi)->sum('nominal');
+        $posisi = $request->posisi;
+      } else { //sesi = semua
+        $keuangan = Keuangan::where('posisi', $request->posisi)->orderBy('tanggal', 'DESC')->get();
+        $keuangan_masuk = Keuangan::where('posisi', 'M')->sum('nominal');
+        $keuangan_keluar = Keuangan::where('posisi', 'K')->sum('nominal');
+        $posisi = $request->posisi;
+      }
+    } else { //posisi = semua
+      if ($request->sesi != 'semua') { //sesi = request
+        $keuangan = Keuangan::where('sesi', $request->sesi)->orderBy('tanggal', 'DESC')->get();
+        $keuangan_masuk = Keuangan::where('posisi', 'M')->sum('nominal');
+        $keuangan_keluar = Keuangan::where('posisi', 'K')->sum('nominal');
+        $posisi = $request->posisi;
+      } else { //sesi = semua
+        $keuangan = Keuangan::orderBy('tanggal', 'DESC')->get();
+        $keuangan_masuk = Keuangan::where('posisi', 'M')->sum('nominal');
+        $keuangan_keluar = Keuangan::where('posisi', 'K')->sum('nominal');
+        $posisi = $request->posisi;
+      }
+    }
+
+    $pdf = PDF::loadView('laporan.pdf.laporan_keuangan', compact('user', 'keuangan', 'keuangan_masuk', 'keuangan_keluar', 'posisi'));
+
+    return $pdf->setPaper('legal')->stream('Laporan Keuangan.pdf');
+  }
+
+  public function excelLaporanKeuangan(Request $request)
+  {
+    $user = User::where('id', $request->user)->first();
+    // $keuangan = Keuangan::whereYear('tanggal', '=', $request->tahun)->orderBy('tanggal', 'desc')->get();
+    // $keuangan_masuk = Keuangan::where('posisi', 'M')->whereYear('tanggal', '=', $request->tahun)->sum('nominal');
+    // $keuangan_keluar = Keuangan::where('posisi', 'K')->whereYear('tanggal', '=', $request->tahun)->sum('nominal');
+    $keuangan = Keuangan::whereBetween('tanggal', [$request->awal, $request->akhir])->orderBy('tanggal', 'desc')->get();
+    $keuangan_masuk = Keuangan::where('posisi', 'M')->whereBetween('tanggal', [$request->awal, $request->akhir])->sum('nominal');
+    $keuangan_keluar = Keuangan::where('posisi', 'K')->whereBetween('tanggal', [$request->awal, $request->akhir])->sum('nominal');
+    // $pdf = PDF::loadView('laporan.pdf.laporan_keuangan', compact('user', 'keuangan', 'keuangan_masuk', 'keuangan_keluar'));
+    // return $pdf->setPaper('legal')->stream('Laporan Keuangan.pdf');
+    Excel::create('Laporan Keuangan ', function ($excel) use ($user, $keuangan, $keuangan_masuk, $keuangan_keluar) {
+      $excel->sheet('New sheet', function ($sheet) use ($user, $keuangan, $keuangan_masuk, $keuangan_keluar) {
+        $sheet->setStyle(array(
+          'font' => array(
+            'size' =>  12,
+          )
+        ));
+        $sheet->loadView('laporan.excel.excel_laporan_keuangan', compact('user', 'keuangan', 'keuangan_masuk', 'keuangan_keluar'));
+      });
+    })->download('xlsx');
+  }
 }

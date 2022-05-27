@@ -35,7 +35,10 @@ class SiswaController extends Controller
     if (auth()->user()->status == 'A') {
       $user = User::where('id', auth()->user()->id)->first();
       $kelas = Kelas::get();
-      return view('siswa.index', compact('user', 'kelas'));
+      $peserta = User::where('status', 'S')->orderBy('nama', 'asc')->get();
+      //$kel = User::find(5)->getKelas->nama;
+      //dd($kel);
+      return view('siswa.index', compact('user', 'kelas', 'peserta'));
     } else {
       return redirect()->route('home.index');
     }
@@ -128,7 +131,9 @@ class SiswaController extends Controller
   {
     if (auth()->user()->status == 'A') {
       $user = User::where('id', auth()->user()->id)->first();
-      $siswa = User::select('users.*', 'payments.status AS status_payment')->join('payments', 'payments.id', '=', 'users.payment_id')->where('users.id', $request->id)->first();
+      // $siswa = User::select('users.*', 'payments.status AS status_payment')->join('payments', 'payments.id', '=', 'users.payment_id')->where('users.id', $request->id)->first();
+      $siswa = User::find($request->id);
+
       return view('siswa.detail', compact('user', 'siswa'));
     } else {
       return redirect()->route('home.index');
@@ -148,12 +153,12 @@ class SiswaController extends Controller
 
       $pdf = PDF::loadView('pdf.kartu_ujian', ['peserta' => $query]);
       $pdf2 = PDF::loadView('pdf.tata_cara');
-    
-      Mail::send('emails.send_mail', $data, function($message) use ($data, $pdf, $pdf2) {
-          $message->to($data["email"])
-                  ->subject($data["title"])
-                  ->attachData($pdf->output(), "Kartu Ujian.pdf")
-                  ->attachData($pdf2->output(), "Tata Cara Ujian.pdf");
+
+      Mail::send('emails.send_mail', $data, function ($message) use ($data, $pdf, $pdf2) {
+        $message->to($data["email"])
+          ->subject($data["title"])
+          ->attachData($pdf->output(), "Kartu Ujian.pdf")
+          ->attachData($pdf2->output(), "Tata Cara Ujian.pdf");
       });
       return redirect('master/siswa/detail/' . $request->id)->withSuccess('Data berhasil divalidasi');
     } else {
@@ -172,7 +177,7 @@ class SiswaController extends Controller
       $kelas = Kelas::select('kelas.*')->where('kelas.tanggal', '>', $dt->toDateString())->get();
       if ($user->payment_id != null) {
         $payment = Payment::where('id', $user->payment_id)->first();
-        if($datetime_sekarang > $payment->payment_until){
+        if ($datetime_sekarang > $payment->payment_until) {
           $user->id_kelas = null;
           $user->payment_id = null;
           $user->status_validasi = 'N';
@@ -277,9 +282,9 @@ class SiswaController extends Controller
     $data["email"] = $request->email;
     $data["title"] = "Pembayaran belum selesai";
     $data["body"] = "";
-    $data["text"] = "Pembayaran ujian anda pada ". $request->sesi ." (". $request->tanggal .") belum selesai, mohon untuk segera melakukan pembayaran";
+    $data["text"] = "Pembayaran ujian anda pada " . $request->sesi . " (" . $request->tanggal . ") belum selesai, mohon untuk segera melakukan pembayaran";
 
-    Mail::send('emails.send_mail', $data, function($message) use ($data) {
+    Mail::send('emails.send_mail', $data, function ($message) use ($data) {
       $message->to($data["email"])->subject($data["title"]);
     });
 
@@ -460,6 +465,34 @@ class SiswaController extends Controller
     $save->jawab = $request->jawab_essay;
     if ($save->save()) {
       return 1;
+    }
+  }
+
+  //filter nilai berdasarkan sesi
+  public function filterSiswaSesi(Request $request)
+  {
+    if (auth()->user()->status == 'A') {
+
+      $user = User::where('id', auth()->user()->id)->first();
+      $kelas = Kelas::get();
+
+      if ($request->sesi == 'semua') {
+        $peserta = User::where('status', 'S')->orderBy('nama', 'asc')->get();
+
+        return view('siswa.index', compact('user', 'peserta', 'kelas'));
+      } else {
+        $peserta = User::where('id_kelas', $request->sesi)->orderBy('id', 'ASC')->get();
+
+        return view('siswa.index', compact('user', 'peserta', 'kelas'));
+        // if ($peserta) {
+        //   return view('siswa.index', compact('user', 'peserta', 'kelas'));
+        // } else {
+        //   $peserta = User::where('status', 'S')->orderBy('nama', 'asc')->get();
+        //   return view('siswa.index', compact('user', 'kelas', 'peserta'));
+        // }
+      }
+    } else {
+      return redirect()->route('home.index');
     }
   }
 }

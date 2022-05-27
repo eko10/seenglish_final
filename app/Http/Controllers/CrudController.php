@@ -206,7 +206,7 @@ class CrudController extends Controller
     $query->save();
     return 'ok';
   }
-  
+
   public function updateGuru(Request $request)
   {
     if ($request->id == 'N') {
@@ -245,13 +245,13 @@ class CrudController extends Controller
     $dt = Carbon::now('Asia/Jakarta');
     $tanggal = $dt->toDateString();
 
-    if($request->hasFile('gambar')){
-      if($request->hasFile('gambar')){
+    if ($request->hasFile('gambar')) {
+      if ($request->hasFile('gambar')) {
         $imageUpload = $request->file('gambar');
-        $imageName = 'GambarInfo_'.str_replace(' ', '', $request->nama).'_' . rand() . '.' . $imageUpload->getClientOriginalExtension();
+        $imageName = 'GambarInfo_' . str_replace(' ', '', $request->nama) . '_' . rand() . '.' . $imageUpload->getClientOriginalExtension();
         $imagePath = public_path('/assets/img/informasi/');
         $imageUpload->move($imagePath, $imageName);
-      }else{
+      } else {
         $imageName = null;
       }
       $query->judul = $request->judul;
@@ -275,15 +275,15 @@ class CrudController extends Controller
   {
     if (!$request->nama) {
       return 'Nama sesi tidak boleh kosong';
-    }elseif (!$request->tanggal) {
+    } elseif (!$request->tanggal) {
       return 'Tanggal tidak boleh kosong';
-    }elseif (!$request->jam_mulai) {
+    } elseif (!$request->jam_mulai) {
       return 'Jam mulai tidak boleh kosong';
-    }elseif (!$request->jam_selesai) {
+    } elseif (!$request->jam_selesai) {
       return 'Jam selesai tidak boleh kosong';
-    }elseif (!$request->kuota) {
+    } elseif (!$request->kuota) {
       return 'Kuota tidak boleh kosong';
-    }elseif (!$request->link_wa) {
+    } elseif (!$request->link_wa) {
       return 'Link Whatsapp tidak boleh kosong';
     }
     if ($request->id == 'N') {
@@ -352,22 +352,22 @@ class CrudController extends Controller
 
     $query = new User;
 
-    if($request->hasFile('gambar') || $request->hasFile('bukti_transfer')){
-      if($request->hasFile('gambar')){
+    if ($request->hasFile('gambar') || $request->hasFile('bukti_transfer')) {
+      if ($request->hasFile('gambar')) {
         $imageUploadFoto = $request->file('gambar');
-        $imageNameFoto = 'Foto_'.str_replace(' ', '', $request->nama).'_' . rand() . '.' . $imageUploadFoto->getClientOriginalExtension();
+        $imageNameFoto = 'Foto_' . str_replace(' ', '', $request->nama) . '_' . rand() . '.' . $imageUploadFoto->getClientOriginalExtension();
         $imagePathFoto = public_path('/assets/img/user/');
         $imageUploadFoto->move($imagePathFoto, $imageNameFoto);
-      }else{
+      } else {
         $imageNameFoto = null;
       }
 
-      if($request->hasFile('bukti_transfer')){
+      if ($request->hasFile('bukti_transfer')) {
         $imageUploadBT = $request->file('bukti_transfer');
-        $imageNameBT = 'BT_'.str_replace(' ', '', $request->nama).'_' . rand() . '.' . $imageUploadBT->getClientOriginalExtension();
+        $imageNameBT = 'BT_' . str_replace(' ', '', $request->nama) . '_' . rand() . '.' . $imageUploadBT->getClientOriginalExtension();
         $imagePathBT = public_path('/assets/img/user/');
         $imageUploadBT->move($imagePathBT, $imageNameBT);
-      }else{
+      } else {
         $imageNameBT = null;
       }
 

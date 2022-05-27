@@ -25,9 +25,14 @@ class NilaiController extends Controller
     public function index()
     {
         if (auth()->user()->status == 'A') {
-        $user = User::where('id', auth()->user()->id)->first();
-        $nilai = Nilai::get();
-            return view('nilai.index', compact('user', 'nilai'));
+            $user = User::where('id', auth()->user()->id)->first();
+            $nilai = Nilai::get();
+            $kelas = Kelas::get();
+            //$peserta = User::where('status', 'S')->get();
+            //$nil = Nilai::find(4)->getUser->nama;
+            //$kel = Nilai::find(4)->getKelas;
+
+            return view('nilai.index', compact('user', 'nilai', 'kelas'));
         } else {
             return redirect()->route('home.index');
         }
@@ -41,34 +46,34 @@ class NilaiController extends Controller
                 return $nilai->peserta;
             })
             ->addColumn('kelas', function ($nilai) {
-                return $nilai->kelas." (".$nilai->tanggal.")";
+                return $nilai->kelas . " (" . $nilai->tanggal . ")";
             })
             ->editColumn('nilai_reading', function ($nilai) {
                 if ($nilai->nilai_reading == null) {
                     return "<center><span class='label label-danger'>Belum Terisi</span></center>";
                 } else {
-                    return "<center>".$nilai->nilai_reading."</center>";
+                    return "<center>" . $nilai->nilai_reading . "</center>";
                 }
             })
             ->editColumn('nilai_writing', function ($nilai) {
                 if ($nilai->nilai_writing == null) {
                     return "<center><span class='label label-danger'>Belum Terisi</span></center>";
                 } else {
-                    return "<center>".$nilai->nilai_writing."</center>";
+                    return "<center>" . $nilai->nilai_writing . "</center>";
                 }
             })
             ->editColumn('nilai_listening', function ($nilai) {
                 if ($nilai->nilai_listening == null) {
                     return "<center><span class='label label-danger'>Belum Terisi</span></center>";
                 } else {
-                    return "<center>".$nilai->nilai_listening."</center>";
+                    return "<center>" . $nilai->nilai_listening . "</center>";
                 }
             })
             ->editColumn('nilai_total', function ($nilai) {
                 if ($nilai->nilai_total == null) {
                     return "<center><span class='label label-danger'>Belum Terisi</span></center>";
                 } else {
-                    return "<center>".$nilai->nilai_total."</center>";
+                    return "<center>" . $nilai->nilai_total . "</center>";
                 }
             })
             ->addColumn('action', function ($nilai) {
@@ -80,7 +85,7 @@ class NilaiController extends Controller
                                     </div>';
                         } else {
                             return '<div style="text-align:center">
-                                        <a href="nilai/cetak/pdf/sertifikat/'. $nilai->id_user .'/'. $nilai->id_kelas .'" class="btn btn-sm btn-warning" target="_blank"><i class="fa fa-file-pdf-o"></i> Cetak Setifikat</a>
+                                        <a href="nilai/cetak/pdf/sertifikat/' . $nilai->id_user . '/' . $nilai->id_kelas . '" class="btn btn-sm btn-warning" target="_blank"><i class="fa fa-file-pdf-o"></i> Cetak Setifikat</a>
                                     </div>';
                         }
                     } else {
@@ -94,7 +99,6 @@ class NilaiController extends Controller
             })
             ->rawColumns(['kelas', 'nilai_reading', 'nilai_writing', 'nilai_listening', 'nilai_total', 'action'])
             ->make(true);
-        
     }
 
     public function inputNilai($id)
@@ -153,12 +157,12 @@ class NilaiController extends Controller
 
             $keuangan = new Keuangan;
             $keuangan->posisi = 'K';
-            $keuangan->keterangan = 'Pembayaran Penerbitan Sertifikat Ujian '. $user->nama .' ('. $user->email .')';
+            $keuangan->keterangan = 'Pembayaran Penerbitan Sertifikat Ujian ' . $user->nama . ' (' . $user->email . ')';
             $keuangan->tanggal = date('Y-m-d');
             $keuangan->nominal = $request->nominal;
             $keuangan->save();
 
-            return redirect()->route('nilai')->with(['alert-success' => 'Sertifikat a/n '.$user->nama.' berhasil diterbitkan'])->with(['alert-failed' => 'Terjadi kesalahan']);
+            return redirect()->route('nilai')->with(['alert-success' => 'Sertifikat a/n ' . $user->nama . ' berhasil diterbitkan'])->with(['alert-failed' => 'Terjadi kesalahan']);
         } else {
             return redirect()->route('home.index');
         }
@@ -169,7 +173,7 @@ class NilaiController extends Controller
         $siswa = User::where('id', $user)->first();
         $nilai = Nilai::where('id_user', $user)->where('id_kelas', $kelas)->first();
         $pdf = PDF::loadView('laporan.pdf.sertifikat_ujian', compact('siswa', 'nilai'));
-        return $pdf->setPaper('legal')->stream('Sertifikat Ujian - '.$siswa->nama.'.pdf');
+        return $pdf->setPaper('legal')->stream('Sertifikat Ujian - ' . $siswa->nama . '.pdf');
     }
 
     public function import()
@@ -194,5 +198,26 @@ class NilaiController extends Controller
             return redirect()->route('home.index');
         }
     }
-    
+
+    //filter nilai berdasarkan sesi
+    public function filterNilaiSesi(Request $request)
+    {
+        if (auth()->user()->status == 'A') {
+
+            $user = User::where('id', auth()->user()->id)->first();
+            $kelas = Kelas::get();
+
+            if ($request->sesi == 'semua') {
+                $nilai = Nilai::get();
+
+                return view('nilai.index', compact('user', 'nilai', 'kelas'));
+            } else {
+                $nilai = Nilai::where('id_kelas', $request->sesi)->orderBy('id', 'ASC')->get();
+
+                return view('nilai.index', compact('user', 'nilai', 'kelas'));
+            }
+        } else {
+            return redirect()->route('home.index');
+        }
+    }
 }
