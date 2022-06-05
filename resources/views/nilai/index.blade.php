@@ -63,6 +63,7 @@
             <th style="width: 130px; text-align: center;">Aksi</th>
           </tr>
         </thead>
+        @if($nilai->count() > 0)
         <tbody>
           @foreach($nilai as $n)
           <tr>
@@ -96,6 +97,13 @@
           </tr>
           @endforeach
         </tbody>
+        @else
+        <tbody>
+          <tr>
+            <td colspan="7" style="text-align: center;"><br>Belum ada nilai</td>
+          </tr>
+        </tbody>
+        @endif
       </table>
     </div>
   </div>

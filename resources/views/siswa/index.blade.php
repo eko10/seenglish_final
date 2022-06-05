@@ -164,6 +164,7 @@
           <th style="width: 130px; text-align: center;">Aksi</th>
         </tr>
       </thead>
+      @if($peserta->count() > 0)
       <tbody>
         @foreach($peserta as $siswa)
         <tr>
@@ -178,6 +179,13 @@
         </tr>
         @endforeach
       </tbody>
+      @else
+      <tbody>
+        <tr>
+          <td colspan="7" style="text-align: center;"><br>Belum ada peserta</td>
+        </tr>
+      </tbody>
+      @endif
     </table>
     <!-- <table id="tabel_siswa" class="table table-hover table-condensed">
       <thead>

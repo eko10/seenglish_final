@@ -75,6 +75,7 @@
             <th>Nominal</th>
           </tr>
         </thead>
+        @if($keuangan->count() > 0)
         <tbody>
           @foreach($keuangan as $k)
           <tr>
@@ -92,6 +93,13 @@
           </tr>
           @endforeach
         </tbody>
+        @else
+        <tbody>
+          <tr>
+            <td colspan="7" style="text-align: center;"><br>Belum ada laporan keuangan</td>
+          </tr>
+        </tbody>
+        @endif
       </table>
       <!-- <button id="buttonPrint">Print</button> -->
     </div>
