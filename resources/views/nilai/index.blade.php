@@ -11,9 +11,9 @@
 <?php include(app_path() . '/functions/myconf.php'); ?>
 <div class="col-md-12">
   @if (Session::has('success'))
-    <div class="alert alert-success">
-      <i class="fa fa-check-circle"></i> {{ Session::get('success') }}
-    </div>
+  <div class="alert alert-success">
+    <i class="fa fa-check-circle"></i> {{ Session::get('success') }}
+  </div>
   @endif
   <div class="box box-primary">
     <div class="box-header with-border">
@@ -21,16 +21,35 @@
       <div class="pull-right">
         <a href="{{ route('nilai.import') }}" class="btn btn-success btn-md" data-toggle="tooltip" title="Import Excel"><i class="fa fa-file-excel-o"></i> Import Excel</a>
       </div>
+      <div class="col-sm-12">
+        <form action="{{ route('nilai.filter') }}" method="POST" class="form-horizontal">
+          {!! csrf_field() !!}
+          <div class="form-group">
+            <!-- <label>Nama peserta</label>
+            <input type="text" class="form-control" name="nama" id="nama" placeholder="Nama peserta" autocomplete="off"> -->
+            <label>Sesi</label>
+            <select name="sesi" id="sesi" class="form-control" placeholder="Pilih sesi">
+              <option value="semua">Semua sesi</option>
+              @foreach($kelas as $s)
+              <option value="{{ $s->id }}">{{ $s->nama . ' (' . $s->tanggal . ')' }}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="form-group">
+            <button type="submit" name="filter" class="btn btn-primary">Filter Sesi</button>
+          </div>
+        </form>
+      </div>
     </div>
     <div class="box-body">
       @if(session('alert-success'))
-        <div class="alert alert-success">
+      <div class="alert alert-success">
         <i class="fa fa-check-square-o"></i> {{session('alert-success')}}
-        </div>
+      </div>
       @elseif(session('alert-failed'))
-        <div class="alert alert-danger">
+      <div class="alert alert-danger">
         <i class="fa fa-times"></i> {{session('alert-failed')}}
-        </div>
+      </div>
       @endif
       <table id="tabel_nilai" class="table table-hover">
         <thead>
@@ -44,6 +63,47 @@
             <th style="width: 130px; text-align: center;">Aksi</th>
           </tr>
         </thead>
+        @if($nilai->count() > 0)
+        <tbody>
+          @foreach($nilai as $n)
+          <tr>
+            <td id="nama">{{ $n->getUser->nama }}</td>
+            <td id="sesi">{{ $n->getKelas->nama . ' (' . $n->getKelas->tanggal . ')' }}</td>
+            <td style="text-align: center">{{ $n->nilai_reading }}</td>
+            <td style="text-align: center">{{ $n->nilai_writing }}</td>
+            <td style="text-align: center">{{ $n->nilai_listening }}</td>
+            <td style="text-align: center">{{ $n->nilai_total }}</td>
+            <td>@php
+              if ($n->nilai_reading != null && $n->nilai_writing != null && $n->nilai_listening != null && $n->nilai_total != null) {
+              if ($n->nilai_total >= 450) {
+              if ($n->status_pengeluaran == 'N') { @endphp
+              <div style="text-align:center">
+                <a href="nilai/pengeluaran/{{ $n->id  }}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Biaya Penerbitan Sertifikat</a>
+              </div>;
+              @php } else { @endphp
+              <div style="text-align:center">
+                <a href="nilai/cetak/pdf/sertifikat/{{ $n->id_user }}/{{ $n->id_kelas }}" class="btn btn-sm btn-warning" target="_blank"><i class="fa fa-file-pdf-o"></i> Cetak Setifikat</a>
+              </div>;
+              @php }
+              } else { @endphp
+              <center>-</center>';
+              @php }
+              } else { @endphp
+              <div style="text-align:center">
+                <a href="nilai/input/{{ $n->id }}" class="btn btn-sm btn-success"><i class="fa fa-edit"></i> Input Nilai</a>
+              </div>;
+              @php } @endphp
+            </td>
+          </tr>
+          @endforeach
+        </tbody>
+        @else
+        <tbody>
+          <tr>
+            <td colspan="7" style="text-align: center;"><br>Belum ada nilai</td>
+          </tr>
+        </tbody>
+        @endif
       </table>
     </div>
   </div>
@@ -95,7 +155,8 @@
     pointer-events: none;
   }
 
-  .upload_url_img, .upload_url_bg {
+  .upload_url_img,
+  .upload_url_bg {
     width: 0.1px;
     height: 0.1px;
     opacity: 0;
@@ -104,7 +165,8 @@
     z-index: -1;
   }
 
-  .upload_url_img + label, .upload_url_bg + label {
+  .upload_url_img+label,
+  .upload_url_bg+label {
     margin-top: 5px;
     font-size: 11pt;
     font-weight: 700;
@@ -118,10 +180,10 @@
     width: 30%;
   }
 
-  .upload_url_img:focus + label,
-  .upload_url_img + label:hover,
-  .upload_url_bg:focus + label,
-  .upload_url_bg + label:hover {
+  .upload_url_img:focus+label,
+  .upload_url_img+label:hover,
+  .upload_url_bg:focus+label,
+  .upload_url_bg+label:hover {
     outline: 1px dotted #000;
     outline: -webkit-focus-ring-color auto 5px;
   }
@@ -136,58 +198,88 @@
 <script src="{{URL::asset('assets/plugins/datatables/extensions/FixedHeader/js/dataTables.fixedHeader.js')}}"></script>
 <script>
   $(document).ready(function() {
-    $('.select2Class').select2();
-
-    tabel_nilai = $('#tabel_nilai').DataTable({
-      processing: true,
-      serverSide: true,
+    $('#tabel_nilai').DataTable({
       responsive: true,
       lengthChange: true,
-      ajax: '{{ route("elearning.data_nilai") }}',
-      columns: [{
-          data: 'peserta',
-          name: 'peserta',
-          orderable: false,
-          searchable: true
-        },
-        {
-          data: 'kelas',
-          name: 'kelas',
-          orderable: false,
-          searchable: true
-        },
-        {
-          data: 'nilai_reading',
-          name: 'nilai_reading',
-          orderable: false,
-          searchable: true
-        },
-        {
-          data: 'nilai_writing',
-          name: 'nilai_writing',
-          orderable: false,
-          searchable: true
-        },
-        {
-          data: 'nilai_listening',
-          name: 'nilai_listening',
-          orderable: false,
-          searchable: true
-        },
-        {
-          data: 'nilai_total',
-          name: 'nilai_total',
-          orderable: false,
-          searchable: true
-        },
-        {
-          data: 'action',
-          name: 'action',
-          orderable: false,
-          searchable: false
-        },
-      ]
+      order: [
+        [2, "desc"]
+      ],
+      columnDefs: [{
+        orderable: false,
+        searchable: true,
+        targets: [0, 1, 2, 3, 4, 5]
+      }],
     });
   });
+  // $(document).ready(function() {
+  //   $('.select2Class').select2();
+
+  //   tabel_nilai = $('#tabel_nilai').DataTable({
+  //     processing: true,
+  //     serverSide: true,
+  //     responsive: true,
+  //     lengthChange: true,
+  //     ajax: '{{ route("elearning.data_nilai") }}',
+  //     columns: [{
+  //         data: 'peserta',
+  //         name: 'peserta',
+  //         orderable: false,
+  //         searchable: true
+  //       },
+  //       {
+  //         data: 'kelas',
+  //         name: 'kelas',
+  //         orderable: false,
+  //         searchable: true
+  //       },
+  //       {
+  //         data: 'nilai_reading',
+  //         name: 'nilai_reading',
+  //         orderable: false,
+  //         searchable: true
+  //       },
+  //       {
+  //         data: 'nilai_writing',
+  //         name: 'nilai_writing',
+  //         orderable: false,
+  //         searchable: true
+  //       },
+  //       {
+  //         data: 'nilai_listening',
+  //         name: 'nilai_listening',
+  //         orderable: false,
+  //         searchable: true
+  //       },
+  //       {
+  //         data: 'nilai_total',
+  //         name: 'nilai_total',
+  //         orderable: false,
+  //         searchable: true
+  //       },
+  //       {
+  //         data: 'action',
+  //         name: 'action',
+  //         orderable: false,
+  //         searchable: false
+  //       },
+  //     ]
+  //   });
+  // });
+
+  // $(document).ready(function() {
+  //   $('#search').on('keyup', function() {
+  //     $.ajax({
+  //       type: 'POST',
+  //       url: '{{ route("elearning.filter_nilai") }}',
+  //       data: {
+  //         search: $(this).val()
+  //       },
+  //       cache: false,
+  //       success: function(data) {
+  //         $('#tampil').html(data);
+  //       }
+  //     });
+  //   });
+  // });
 </script>
 @endpush

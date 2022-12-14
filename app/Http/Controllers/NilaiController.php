@@ -27,7 +27,9 @@ class NilaiController extends Controller
         if (auth()->user()->status == 'A') {
         $user = User::where('id', auth()->user()->id)->first();
         $nilai = Nilai::get();
-            return view('nilai.index', compact('user', 'nilai'));
+        $kelas = Kelas::get();
+
+            return view('nilai.index', compact('user', 'nilai', 'kelas'));
         } else {
             return redirect()->route('home.index');
         }
@@ -190,6 +192,28 @@ class NilaiController extends Controller
             Excel::toCollection(new NilaisImport(), $request->file('file_excel'));
             Excel::import(new NilaisImport($request->sesi), $request->file('file_excel'));
             return redirect()->route('nilai')->withSuccess('Data excel berhasil diimport.');
+        } else {
+            return redirect()->route('home.index');
+        }
+    }
+
+    //filter nilai berdasarkan sesi
+    public function filterNilaiSesi(Request $request)
+    {
+        if (auth()->user()->status == 'A') {
+
+            $user = User::where('id', auth()->user()->id)->first();
+            $kelas = Kelas::get();
+
+            if ($request->sesi == 'semua') {
+                $nilai = Nilai::get();
+
+                return view('nilai.index', compact('user', 'nilai', 'kelas'));
+            } else {
+                $nilai = Nilai::where('id_kelas', $request->sesi)->orderBy('id', 'ASC')->get();
+
+                return view('nilai.index', compact('user', 'nilai', 'kelas'));
+            }
         } else {
             return redirect()->route('home.index');
         }

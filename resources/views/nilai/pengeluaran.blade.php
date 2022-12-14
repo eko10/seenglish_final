@@ -32,8 +32,8 @@
             <input type="number" class="form-control" value="{{ $nilai->nilai_total }}" readonly placeholder="Nilai Total" required>
           </div>
           <div class="form-group">
-            <label class="control-label">Nominal</label>
-            <input type="number" class="form-control" name="nominal" placeholder="Nominal" required>
+            <label class="control-label">Nominal(Rp.)</label>
+            <input type="number" class="form-control" name="nominal" placeholder="Nominal(Rupiah)" id="nominal" required>
           </div>
       </div>
       <div class="box-footer">

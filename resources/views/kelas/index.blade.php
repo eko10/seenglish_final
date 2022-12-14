@@ -30,20 +30,20 @@
               </div>
               
               <div class="form-group">
-                <label for="tanggal" class="col-sm-2 control-label">Tanggal</label>
+                <label for="tanggal" class="col-sm-2 control-label">Tanggal pelaksanaan</label>
                 <div class="col-sm-10">
                   <input type="text" class="form-control" name="tanggal" id="tanggal" placeholder="2022-02-28" autocomplete="off">
                 </div>
               </div><div class="form-group">
                 <label for="jam_mulai" class="col-sm-2 control-label">Jam Mulai</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" name="jam_mulai" id="jam_mulai" placeholder="09:00" autocomplete="off">
+                  <input type="time" class="form-control" name="jam_mulai" id="jam_mulai" placeholder="09:00" autocomplete="off">
                 </div>
               </div>
               <div class="form-group">
                 <label for="jam_selesai" class="col-sm-2 control-label">Jam Selesai</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" name="jam_selesai" id="jam_selesai" placeholder="11:00" autocomplete="off">
+                  <input type="time" class="form-control" name="jam_selesai" id="jam_selesai" placeholder="11:00" autocomplete="off">
                 </div>
               </div>
               <div class="form-group">

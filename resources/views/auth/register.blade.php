@@ -123,12 +123,17 @@
             @endif
           </div>
           <div class="form-group has-feedback {{ $errors->has('gambar') ? ' has-error' : '' }}">
-            <input id="gambar" type="file" class="form-control" name="gambar" placeholder="gambar" style="width: 85%; margin: auto;">
-            @if ($errors->has('gambar'))
-            <span class="help-block">
-              <strong>{{ $errors->first('gambar') }}</strong>
-            </span>
-            @endif
+            <div class="col-sm-3">
+              <label for="gambar">Foto profil</label>
+            </div>
+            <div class="col-sm-9">
+              <input id="gambar" type="file" class="form-control" name="gambar" placeholder="gambar" style="width: 85%; margin: auto;">
+              @if ($errors->has('gambar'))
+              <span class="help-block">
+                <strong>{{ $errors->first('gambar') }}</strong>
+              </span>
+              @endif
+            </div>
           </div>
           <div class="row">
             <div class="col-xs-8"></div>
